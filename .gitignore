@@ -1,0 +1,44 @@
+# Secretos y configuración local
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.pfx
+*.p12
+*.jks
+*.kdbx
+*credentials*
+*secrets*
+
+# Evidencias y capturas sin sanitizar
+**/evidencias/raw/
+**/evidencias/privado/
+*.pcap
+*.pcapng
+*.har
+*.dmp
+*.dump
+*.log
+
+# Archivos del sistema y editores
+.DS_Store
+Thumbs.db
+Desktop.ini
+.idea/
+.vscode/
+*.swp
+*.tmp
+
+# Entornos y cachés
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+node_modules/
+.pytest_cache/
+
+# Salidas generadas
+dist/
+build/
+coverage/
