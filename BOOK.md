@@ -168,6 +168,27 @@ Ejemplos del laboratorio:
 
 Una respuesta DNS puede incluir registros `A` para IPv4 y `AAAA` para IPv6. “Respuesta no autoritativa” significa que respondió un resolver recursivo o su caché, no que la consulta haya fallado. Si `nslookup` muestra el servidor como `Unknown`, normalmente falta una resolución inversa para el servidor DNS; esto tampoco implica un fallo de resolución.
 
+### 3.4 ICMP, TTL y traceroute
+
+`ping` usa ICMP Echo Request y Echo Reply para comprobar alcance y medir el tiempo de ida y vuelta. Una respuesta confirma conectividad ICMP, pero la ausencia de respuesta no demuestra por sí sola que el equipo o servicio esté caído: ICMP puede estar filtrado.
+
+El campo TTL evita que un paquete circule indefinidamente. Cada router lo reduce en uno. `tracert` aprovecha este comportamiento enviando pruebas con TTL creciente y observando los mensajes ICMP Time Exceeded. La ruta obtenida es aproximada: puede haber filtrado, balanceo, rutas asimétricas o routers que reenvían tráfico sin responder.
+
+El bloque `100.64.0.0/10` es espacio compartido usado habitualmente para Carrier-Grade NAT (CGNAT). Su presencia inmediatamente después del router doméstico sugiere que el proveedor realiza una traducción IPv4 adicional. Esto puede dificultar conexiones entrantes y la publicación directa de servicios IPv4.
+
+### 3.5 Diagnóstico por capas
+
+Una comprobación ordenada permite aislar fallos:
+
+| Prueba | Qué valida | Limitación |
+|---|---|---|
+| `ping <gateway>` | Enlace y red local hasta el router | Puede ser bloqueado por firewall |
+| `ping <IP externa>` | Enrutamiento hacia Internet sin depender de DNS | No valida nombres ni servicios TCP |
+| `ping <nombre>` | Resolución DNS y alcance ICMP | El servidor puede bloquear ICMP |
+| `Test-NetConnection <host> -Port 443` | Resolución, ruta y establecimiento TCP al puerto | No valida por completo TLS ni la aplicación HTTP |
+
+Cuando un nombre tiene registros IPv4 e IPv6, el sistema puede preferir IPv6 si dispone de conectividad funcional. Ver una dirección IPv6 en `ping` o `Test-NetConnection` demuestra qué familia se seleccionó para esa prueba concreta.
+
 ## 4. Higiene para laboratorios
 
 - Usar entornos aislados y objetivos autorizados.
