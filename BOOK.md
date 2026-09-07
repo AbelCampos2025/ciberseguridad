@@ -143,6 +143,31 @@ Interpretación rápida:
 - Nombre resuelve pero el servicio falla: revisar ruta, puerto, firewall, proxy y servicio remoto.
 - WSL funciona de forma distinta a Windows: comparar interfaces, rutas, DNS, NAT y reglas de firewall de ambos entornos.
 
+### 3.1 ARP y entrega local
+
+La caché ARP relaciona direcciones IPv4 con direcciones MAC dentro de un enlace local. Las asociaciones aprendidas aparecen como dinámicas; broadcast y multicast suelen aparecer como entradas estáticas definidas por el protocolo.
+
+Al comunicarse con un servidor remoto, la trama Ethernet lleva como destino la MAC del gateway, mientras que el paquete IP conserva como destino la IP del servidor. La MAC cambia en cada segmento; la IP identifica el destino lógico de extremo a extremo, salvo mecanismos como NAT.
+
+ARP no autentica al propietario de una dirección. Esta falta de autenticación permite ataques como ARP spoofing, que solo deben estudiarse en laboratorios aislados y autorizados.
+
+### 3.2 Selección de rutas
+
+Windows selecciona primero la ruta que coincida con el prefijo más específico. La métrica sirve principalmente para decidir entre rutas de especificidad comparable.
+
+Ejemplos del laboratorio:
+
+- `192.168.1.218` coincide con `192.168.1.0/24`: entrega directa por Wi-Fi.
+- `172.24.198.76` coincide con `172.24.192.0/20`: entrega directa por Hyper-V.
+- `8.8.8.8` no coincide con una red conectada: utiliza `0.0.0.0/0` y el gateway `192.168.1.1`.
+- El bloque `172.24.192.0/20` termina en `172.24.207.255`; `172.24.208.1` ya queda fuera.
+
+“En vínculo” significa que el destino está conectado directamente. Windows intenta obtener la MAC del destino mediante ARP y no utiliza un gateway intermedio.
+
+### 3.3 Interpretación de DNS
+
+Una respuesta DNS puede incluir registros `A` para IPv4 y `AAAA` para IPv6. “Respuesta no autoritativa” significa que respondió un resolver recursivo o su caché, no que la consulta haya fallado. Si `nslookup` muestra el servidor como `Unknown`, normalmente falta una resolución inversa para el servidor DNS; esto tampoco implica un fallo de resolución.
+
 ## 4. Higiene para laboratorios
 
 - Usar entornos aislados y objetivos autorizados.

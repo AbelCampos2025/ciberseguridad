@@ -11,3 +11,4 @@ El formato sigue los principios de [Keep a Changelog](https://keepachangelog.com
 - Estructura profesional inicial del repositorio.
 - Libro maestro con fundamentos de redes y seguridad de la información.
 - Plantillas de módulos, laboratorios, cheatsheets y proyectos.
+- Laboratorio sanitizado sobre ARP, selección de rutas y resolución DNS.
